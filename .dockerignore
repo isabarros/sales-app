@@ -1,0 +1,13 @@
+# Ignore bundler config.
+.bundle
+
+# Ignore all logfiles and tempfiles.
+log/*
+tmp/*
+!.keep
+
+# Ignore other files and directories.
+node_modules
+docker-compose.yml
+Dockerfile
+.git
