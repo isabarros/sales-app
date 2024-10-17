@@ -9,7 +9,7 @@ RUN apt-get update -qq && apt-get install -y \
   vim
 
 # Set the working directory
-WORKDIR /tour_guide
+WORKDIR /sales_app
 
 # Copy the Gemfile and Gemfile.lock into the working directory
 COPY Gemfile Gemfile.lock ./
