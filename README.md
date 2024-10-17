@@ -22,3 +22,7 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+### How to debug docker
+`docker compose up -d` run docker detached from the terminal
+`docker attach image_name` attach the deamon to another terminal
