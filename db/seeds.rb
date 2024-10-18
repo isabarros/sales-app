@@ -1,7 +1,22 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+# Clear existing data (optional)
+SalesRep.destroy_all
+User.destroy_all
+
+# Create Users with FFaker
+10.times do
+  User.create!(
+    name: FFaker::Name.name,
+    email: FFaker::Internet.email
+  )
+end
+
+# Create SalesReps associated with some Users
+User.all.sample(5).each do |user|
+  SalesRep.create!(
+    user: user,
+  )
+end
+
+# Output counts
+puts "#{User.count} users created."
+puts "#{SalesRep.count} sales reps created."
