@@ -10,9 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_18_185355) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_19_182203) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "items", force: :cascade do |t|
+    t.bigint "sale_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_items_on_product_id"
+    t.index ["sale_id"], name: "index_items_on_sale_id"
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.string "name"
+    t.decimal "price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sales", force: :cascade do |t|
+    t.bigint "sales_rep_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sales_rep_id"], name: "index_sales_on_sales_rep_id"
+  end
 
   create_table "sales_reps", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -28,5 +52,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_18_185355) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "items", "products"
+  add_foreign_key "items", "sales"
+  add_foreign_key "sales", "sales_reps"
   add_foreign_key "sales_reps", "users"
 end
