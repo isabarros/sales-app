@@ -1,11 +1,10 @@
-# db/seeds.rb
-
 # Clear existing data (optional)
 Item.destroy_all
 Sale.destroy_all
 SalesRep.destroy_all
 User.destroy_all
 Product.destroy_all
+Organization.destroy_all
 
 # Create Products with FFaker
 products = []
@@ -25,14 +24,27 @@ users = []
   )
 end
 
-# Create SalesReps associated with some Users
+# Create Organizations
+organizations = []
+5.times do
+  organizations << Organization.create!(
+    name: FFaker::Company.name
+  )
+end
+
+# Create SalesReps associated with some Users and assign them to Organizations
+sales_reps = []
 users.sample(5).each do |user|
-  SalesRep.create!(user: user)
+  organization = organizations.sample  # Randomly assign an organization
+  sales_reps << SalesRep.create!(
+    user: user,
+    organization: organization
+  )
 end
 
 # Create Sales and Items associated with SalesReps and Products
-SalesRep.all.each do |sales_rep|
-  sale = Sale.create!(sales_rep: sales_rep) # No total attribute needed
+sales_reps.each do |sales_rep|
+  sale = Sale.create!(sales_rep: sales_rep)
 
   # Create 1-5 random Items for each Sale
   rand(1..5).times do
@@ -52,5 +64,6 @@ end
 puts "#{User.count} users created."
 puts "#{SalesRep.count} sales reps created."
 puts "#{Product.count} products created."
+puts "#{Organization.count} organizations created."
 puts "#{Sale.count} sales created."
 puts "#{Item.count} items created."

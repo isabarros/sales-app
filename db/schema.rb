@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_19_182203) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_05_223506) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,6 +22,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_19_182203) do
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_items_on_product_id"
     t.index ["sale_id"], name: "index_items_on_sale_id"
+  end
+
+  create_table "organizations", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "products", force: :cascade do |t|
@@ -42,6 +48,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_19_182203) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "organization_id"
+    t.index ["organization_id"], name: "index_sales_reps_on_organization_id"
     t.index ["user_id"], name: "index_sales_reps_on_user_id"
   end
 
@@ -55,5 +63,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_19_182203) do
   add_foreign_key "items", "products"
   add_foreign_key "items", "sales"
   add_foreign_key "sales", "sales_reps"
+  add_foreign_key "sales_reps", "organizations"
   add_foreign_key "sales_reps", "users"
 end
