@@ -1,7 +1,11 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  user: one
+  user: john_doe
+  organization: test_organization
 
 two:
-  user: two
+  user: jane_smith
+  organization: other_organization
+
+three:
+  user: alice_williams
+  organization: big_co

@@ -1,0 +1,11 @@
+john_doe:
+  name: "John Doe"
+  email: "john.doe@example.com"
+
+jane_smith:
+  name: "Jane Smith"
+  email: "jane.smith@example.com"
+
+alice_williams:
+  name: "Alice Williams"
+  email: "alice.williams@example.com"

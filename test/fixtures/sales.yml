@@ -1,7 +1,8 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
   sales_rep: one
 
 two:
   sales_rep: two
+
+three:
+  sales_rep: three
