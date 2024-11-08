@@ -1,3 +1,12 @@
+### How to run the application
+`docker compose up`
+
+### How to populate the DB with the seed data
+`rails db:seed`
+
+### How to run the tests
+`rails t`
+
 ### How to debug docker
 `docker compose up -d` run docker detached from the terminal
 
