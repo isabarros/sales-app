@@ -1,3 +1,6 @@
+## Sales App
+This is a generic Rails application that includes sample data, designed to support study and practice.
+
 ### How to run the application
 `docker compose up`
 
