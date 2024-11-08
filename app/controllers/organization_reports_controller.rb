@@ -9,18 +9,29 @@ class OrganizationReportsController < ApplicationController
                         .where(sales_reps: { organization_id: @organization.id })
                         .sum('products.price * items.quantity')
                         .to_f
-    top_products = Product.joins(items: { sale: :sales_rep })
-                          .where(sales_reps: { organization_id: @organization.id })
-                          .select('products.id, products.name, SUM(items.quantity) AS total_quantity_sold')
-                          .group('products.id')
-                          .order('total_quantity_sold DESC')
-                          .limit(5)
 
-    top_products_formatted = top_products.map do |product|
+    sales_reps = SalesRep.arel_table
+    sales = Sale.arel_table
+    products = Product.arel_table
+    items = Item.arel_table
+    top_products_query = products
+                           .join(items).on(items[:product_id].eq(products[:id]))
+                           .join(sales).on(sales[:id].eq(items[:sale_id]))
+                           .join(sales_reps).on(sales_reps[:id].eq(sales[:sales_rep_id])
+                                                               .and(sales_reps[:organization_id].eq(@organization.id)))
+                           .project(products[:id], products[:name], items[:quantity].sum.as('total_quantity_sold'))
+                           .group(products[:id])
+                           .order('total_quantity_sold DESC')
+                           .take(5)
+                           .to_sql
+    top_products_result = ActiveRecord::Base.connection.execute(top_products_query)
+
+    # Format the top products for JSON response
+    top_products_formatted = top_products_result.map do |product|
       {
-        id: product.id,
-        name: product.name,
-        total_quantity_sold: product.total_quantity_sold.to_i
+        id: product['id'],
+        name: product['name'],
+        total_quantity_sold: product['total_quantity_sold'].to_i
       }
     end
 
