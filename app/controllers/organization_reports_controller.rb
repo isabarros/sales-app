@@ -9,9 +9,6 @@ class OrganizationReportsController < ApplicationController
                         .where(sales_reps: { organization_id: @organization.id })
                         .sum('products.price * items.quantity')
                         .to_f
-
-    #
-    # Calculate the top 5 products sold based on quantity within this organization
     top_products = Product.joins(items: { sale: :sales_rep })
                           .where(sales_reps: { organization_id: @organization.id })
                           .select('products.id, products.name, SUM(items.quantity) AS total_quantity_sold')
@@ -27,6 +24,11 @@ class OrganizationReportsController < ApplicationController
       }
     end
 
-    render json: { total_sales_reps:, total_sales:, total_revenue:, top_products: top_products_formatted }
+    render json: {
+      total_sales_reps:,
+      total_sales:,
+      total_revenue:,
+      top_products: top_products_formatted
+    }
   end
 end

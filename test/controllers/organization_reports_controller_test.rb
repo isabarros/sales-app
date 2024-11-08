@@ -5,29 +5,24 @@ class OrganizationReportsControllerTest < ActionController::TestCase
     @organization = Organization.create!(name: "Test Organization")
     @other_organization = Organization.create!(name: "Other Organization")
 
-    # Create Users for each SalesRep
     users = 3.times.map { User.create!(name: FFaker::Name.name, email: FFaker::Internet.email) }
 
-    # Create SalesReps for the organization, each associated with a User
     @sales_reps = users.each_with_index.map do |user, index|
       SalesRep.create!(user: user, organization: @organization)
     end
 
-    product_a = Product.create!(name: "Product A", price: 50)
-    product_b = Product.create!(name: "Product B", price: 20)
-    product_c = Product.create!(name: "Product C", price: 10)
+    @product_a = Product.create!(name: "Product A", price: 50)
+    @product_b = Product.create!(name: "Product B", price: 20)
+    @product_c = Product.create!(name: "Product C", price: 10)
 
-    # Create Sales and Items associated with sales reps in the organization
     @sales_reps.each do |sales_rep|
       sale = Sale.create!(sales_rep: sales_rep)
 
-      # Create Items for each Sale with associated Products
-      Item.create!(sale: sale, product: product_a, quantity: 3)
-      Item.create!(sale: sale, product: product_b, quantity: 2)
-      Item.create!(sale: sale, product: product_c, quantity: 1)
+      Item.create!(sale: sale, product: @product_a, quantity: 3)
+      Item.create!(sale: sale, product: @product_b, quantity: 2)
+      Item.create!(sale: sale, product: @product_c, quantity: 1)
     end
 
-    # Create sales and items for a different organization to ensure isolation
     other_user = User.create!(name: FFaker::Name.name, email: FFaker::Internet.email)
     other_sales_rep = SalesRep.create!(user: other_user, organization: @other_organization)
     other_sale = Sale.create!(sales_rep: other_sales_rep)
@@ -68,7 +63,13 @@ class OrganizationReportsControllerTest < ActionController::TestCase
     json_response = JSON.parse(response.body)
     top_products = json_response['top_products']
     assert_operator top_products.size, :<=, 5
-    assert_equal "Product A", top_products.first["name"]
-    assert_equal 9, top_products.first["total_quantity_sold"] # Product A sold 3 units per sale across 3 sales
+
+    expected_products = [
+      { "id" => @product_a.id, "name" => @product_a.name, "total_quantity_sold" => 9 },
+      { "id" => @product_b.id, "name" => @product_b.name, "total_quantity_sold" => 6 },
+      { "id" => @product_c.id, "name" => @product_c.name, "total_quantity_sold" => 3 },
+    ]
+
+    assert_equal expected_products, top_products
   end
 end
