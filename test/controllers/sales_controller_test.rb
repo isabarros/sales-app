@@ -31,7 +31,7 @@ class SalesControllerTest < ActionController::TestCase
     Item.create!(sale: other_sale, product: Product.create!(name: "Other Product", price: 100), quantity: 5)
   end
 
-  test "should assign total number of Sales Reps for the organization" do
+  test "should return the id from the sale and a list of products with name and quantity" do
     sale = Sale.create!(sales_rep: @sales_reps.first)
     Item.create!(sale:, product: @product_a, quantity: 3)
     Item.create!(sale:, product: @product_b, quantity: 5)
